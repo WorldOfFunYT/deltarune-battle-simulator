@@ -13,6 +13,7 @@ public class Game1 : Game
   private SpriteBatch _spriteBatch;
 
   private Soul Soul;
+  private BattleBox BattleBox;
 
   public string mode;
 
@@ -25,6 +26,7 @@ public class Game1 : Game
     mode = "bullets";
 
     Soul = new Soul();
+    BattleBox = new BattleBox(10, 10, 96, 96);
   }
 
   protected override void Initialize()
@@ -86,8 +88,7 @@ public class Game1 : Game
         break;
     }
 
-    int[] boundingBox = {10, 10, 96, 96};
-    Soul.Update((float)gameTime.ElapsedGameTime.TotalSeconds, boundingBox);
+    Soul.Update((float)gameTime.ElapsedGameTime.TotalSeconds, BattleBox.ReturnBoundingBox());
 
     base.Update(gameTime);
   }
