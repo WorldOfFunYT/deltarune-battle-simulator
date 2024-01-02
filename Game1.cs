@@ -13,7 +13,7 @@ public class Game1 : Game
   private SpriteBatch _spriteBatch;
 
   private Soul Soul;
-  private BattleBox BattleBox;
+  private Rectangle BattleBox;
 
   public string mode;
 
@@ -26,7 +26,7 @@ public class Game1 : Game
     mode = "bullets";
 
     Soul = new Soul();
-    BattleBox = new BattleBox(10, 10, 96, 96);
+    BattleBox = new Rectangle(10, 10, 620, 460);
   }
 
   protected override void Initialize()
@@ -88,7 +88,7 @@ public class Game1 : Game
         break;
     }
 
-    Soul.Update((float)gameTime.ElapsedGameTime.TotalSeconds, BattleBox.ReturnBoundingBox());
+    Soul.Update((float)gameTime.ElapsedGameTime.TotalSeconds, BattleBox);
 
     base.Update(gameTime);
   }
@@ -99,10 +99,13 @@ public class Game1 : Game
 
     // TODO: Add your drawing code here
 
-    // SOUL
-    _spriteBatch.Begin();
-    _spriteBatch.Draw(soulTexture, Soul.position, Color.White);
-    _spriteBatch.End();
+    // SOUL and battlebox
+    if (mode == "bullets") {
+      _spriteBatch.Begin();
+      Render.DrawRectangleOutline(_spriteBatch, BattleBox, Color.White, 4);
+      _spriteBatch.Draw(soulTexture, Soul.position, Color.White);
+      _spriteBatch.End();
+    }
 
     base.Draw(gameTime);
   }
