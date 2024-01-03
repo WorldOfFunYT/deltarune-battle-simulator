@@ -11,11 +11,14 @@ public class Game1 : Game
 
   private GraphicsDeviceManager _graphics;
   private SpriteBatch _spriteBatch;
+  private RenderTarget2D _nativeRenderTarget;
 
   private Soul Soul;
   private Rectangle BattleBox;
 
   public string mode;
+
+  private float SCALE = 1.5f;
 
   public Game1()
   {
@@ -32,9 +35,9 @@ public class Game1 : Game
   protected override void Initialize()
   {
     // TODO: Add your initialization logic here
-
-    _graphics.PreferredBackBufferWidth = 640;
-    _graphics.PreferredBackBufferHeight = 480;
+    _graphics.PreferredBackBufferWidth = (int) (640.0 * SCALE);
+    _graphics.PreferredBackBufferHeight = (int) (480.0 * SCALE);
+    _graphics.PreferMultiSampling = false;
     _graphics.ApplyChanges();
 
     base.Initialize();
@@ -43,6 +46,8 @@ public class Game1 : Game
   protected override void LoadContent()
   {
     _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+    _nativeRenderTarget = new RenderTarget2D(GraphicsDevice, 640, 480);
 
     // TODO: use this.Content to load your game content here
 
@@ -99,6 +104,8 @@ public class Game1 : Game
 
     // TODO: Add your drawing code here
 
+    GraphicsDevice.SetRenderTarget(_nativeRenderTarget);
+
     // SOUL and battlebox
     if (mode == "bullets") {
       _spriteBatch.Begin();
@@ -106,6 +113,12 @@ public class Game1 : Game
       _spriteBatch.Draw(soulTexture, Soul.position, Color.White);
       _spriteBatch.End();
     }
+
+    GraphicsDevice.SetRenderTarget(null);
+
+    _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
+    _spriteBatch.Draw(_nativeRenderTarget, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+    _spriteBatch.End();
 
     base.Draw(gameTime);
   }
